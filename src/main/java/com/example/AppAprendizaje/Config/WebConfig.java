@@ -9,8 +9,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Mapea la URL /uploads/** a la carpeta en disco C:/Users/USER/uploads/
+
+        String absoluteUploadPath = "file:" + System.getProperty("user.dir") + "/uploads/";
+
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:C:/Users/USER/uploads/");
+                .addResourceLocations(absoluteUploadPath);
     }
 }
