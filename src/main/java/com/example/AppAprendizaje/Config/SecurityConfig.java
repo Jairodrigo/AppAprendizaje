@@ -62,7 +62,10 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // 🔹 Permitir frontend Angular
-        configuration.setAllowedOrigin(List.of("https://app-aprendizaje-front.vercel.app"));
+        configuration.setAllowedOriginPatterns(List.of(
+        "https://app-aprendizaje-front.vercel.app",
+        "https://*.vercel.app"
+));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
