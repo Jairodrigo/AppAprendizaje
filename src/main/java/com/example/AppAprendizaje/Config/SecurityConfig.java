@@ -50,7 +50,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("http://localhost:4200/principal")
+                        .logoutSuccessUrl("https://app-aprendizaje-front.vercel.app/principal")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 );
@@ -62,7 +62,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // 🔹 Permitir frontend Angular
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:4200"));
+        configuration.setAllowedOriginPatterns(List.of("https://app-aprendizaje-front.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
