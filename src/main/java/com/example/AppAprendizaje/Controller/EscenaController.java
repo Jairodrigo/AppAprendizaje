@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/escenas")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://app-aprendizaje-front.vercel.app")
 public class EscenaController {
 
     //Inyectamos dependencias
