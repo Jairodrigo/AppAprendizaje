@@ -56,9 +56,9 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         //Decidir redirección
         if (usuario.getGenero() == Usuario.Genero.O ||
                 "Desconocida".equals(usuario.getNacionalidad().getPais())) {
-            response.sendRedirect("http://localhost:4200/cuestionario?usuarioId=" + usuario.getIdUsuario());
+            response.sendRedirect("https://app-aprendizaje-front.vercel.app/cuestionario?usuarioId=" + usuario.getIdUsuario());
         } else {
-            response.sendRedirect("http://localhost:4200/inicio?usuarioId=" + usuario.getIdUsuario());
+            response.sendRedirect("https://app-aprendizaje-front.vercel.app/inicio?usuarioId=" + usuario.getIdUsuario());
         }
 
     }
