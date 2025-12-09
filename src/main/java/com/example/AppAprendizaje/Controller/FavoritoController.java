@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/favoritos")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://app-aprendizaje-front.vercel.app")
 public class FavoritoController {
 
     private final FavoritoService favoritoService;
