@@ -29,7 +29,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/proyectos")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://app-aprendizaje-front.vercel.app")
 public class ProyectoController {
 
     //Inyectamos las dependencias
