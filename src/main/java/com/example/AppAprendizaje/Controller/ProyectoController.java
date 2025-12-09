@@ -94,20 +94,29 @@ public class ProyectoController {
         proyecto.setFechaProyecto(LocalDateTime.now());
         proyecto.setUrlArchivo(dto.getUrlArchivo());
 
-        // 🔥 SI HAY PORTADA, LA GUARDAMOS EN DISCO
         if (portada != null && !portada.isEmpty()) {
 
-            String userFolder = uploadDir + File.separator + "usuario_" + usuario.getIdUsuario();
-            Files.createDirectories(Paths.get(userFolder));
+            // Carpeta raíz ABSOLUTA del proyecto (válida en jar y docker)
+            String absoluteUploadDir = System.getProperty("user.dir")
+                    + File.separator + uploadDir;
 
+            // Carpeta por usuario   ejemplo: uploads/usuario_3
+            String userFolderPath = absoluteUploadDir + File.separator + "usuario_" + usuario.getIdUsuario();
+
+            // Crear carpeta si no existe
+            Files.createDirectories(Paths.get(userFolderPath));
+
+            // Generar nombre único
             String uuid = UUID.randomUUID().toString();
-            String extension = portada.getOriginalFilename()
-                    .substring(portada.getOriginalFilename().lastIndexOf("."));
+            String original = portada.getOriginalFilename();
+            String extension = original.substring(original.lastIndexOf("."));
             String nombreArchivo = uuid + extension;
 
-            File destino = new File(userFolder + File.separator + nombreArchivo);
+            // Ruta final del archivo
+            File destino = new File(userFolderPath + File.separator + nombreArchivo);
             portada.transferTo(destino);
 
+            // Guardamos solo la ruta relativa
             proyecto.setImagenPortada("usuario_" + usuario.getIdUsuario() + "/" + nombreArchivo);
         }
 
