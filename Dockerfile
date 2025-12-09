@@ -18,4 +18,4 @@ FROM eclipse-temurin:17-jre-alpine
 COPY --from=build /app/target/*.jar app.jar
 
 # Define el comando de inicio de la aplicación
-CMD java -jar /app/app.jar
+CMD java -jar /app.jar
