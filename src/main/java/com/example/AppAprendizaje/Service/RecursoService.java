@@ -37,49 +37,65 @@ public class RecursoService {
         this.interaccionRepository = interaccionRepository;
     }
 
-    public Recurso guardarRecurso(MultipartFile archivo, Recurso recurso, Escena escena, Integer idUsuario,
-                                  Double x, Double y, Double ancho, Double alto, UsoRecurso.Forma forma) throws IOException {
-        // Crear carpeta del usuario si no existe
-        String userFolder = uploadDir + File.separator + "usuario_" + idUsuario;
-        Files.createDirectories(Paths.get(userFolder));
+    public Recurso guardarRecurso(
+            MultipartFile archivo,
+            Recurso recurso,
+            Escena escena,
+            Integer idUsuario,
+            Double x,
+            Double y,
+            Double ancho,
+            Double alto,
+            UsoRecurso.Forma forma
+    ) throws IOException {
 
-        // Generar UUID para el archivo
+        // 📌 Ruta absoluta del proyecto (igual que en el controlador)
+        String absoluteUploadDir = System.getProperty("user.dir")
+                + File.separator + uploadDir;
+
+        // 📌 Carpeta por usuario: uploads/usuario_X
+        String userFolderPath = absoluteUploadDir + File.separator + "usuario_" + idUsuario;
+
+        // 📌 Crear carpeta si no existe
+        Files.createDirectories(Paths.get(userFolderPath));
+
+        // 📌 Generar nombre único
         String uuid = UUID.randomUUID().toString();
-        String extension = archivo.getOriginalFilename()
-                .substring(archivo.getOriginalFilename().lastIndexOf("."));
+        String original = archivo.getOriginalFilename();
+        String extension = original.substring(original.lastIndexOf("."));
         String nombreArchivo = uuid + extension;
 
-        // Guardar archivo en disco
-        File destino = new File(userFolder + File.separator + nombreArchivo);
+        // 📌 Guardar archivo en disco
+        File destino = new File(userFolderPath + File.separator + nombreArchivo);
         archivo.transferTo(destino);
 
-        // Guardar ruta en recurso
+        // 📌 Guardar ruta relativa en BD
         recurso.setUrlArchivo("usuario_" + idUsuario + "/" + nombreArchivo);
 
-        // Guardar recurso en BD
+        // 📌 Guardar Recurso en la BD
         Recurso recursoGuardado = recursoRepository.save(recurso);
 
-        // Crear UsoRecurso automático y asociar con la escena
+        // 📌 Crear UsoRecurso automático
         if (escena != null) {
             UsoRecurso uso = new UsoRecurso();
             uso.setEscena(escena);
             uso.setRecurso(recursoGuardado);
+
             if (x != null) uso.setX(x);
             if (y != null) uso.setY(y);
             if (ancho != null) uso.setAncho(ancho);
             if (alto != null) uso.setAlto(alto);
-            if (forma != null) uso.setForma(forma); // <-- Guardamos la forma
-            else uso.setForma(UsoRecurso.Forma.CUADRADO);
-            usoRecursoRepository.save(uso);
 
-            // Guardar UsoRecurso
+            uso.setForma(forma != null ? forma : UsoRecurso.Forma.CUADRADO);
+
             UsoRecurso usoGuardado = usoRecursoRepository.save(uso);
-            recursoGuardado.setUsosRecursos(List.of(usoGuardado));
 
+            recursoGuardado.setUsosRecursos(List.of(usoGuardado));
         }
 
         return recursoGuardado;
     }
+
 
     public Recurso guardarRecursoReaccion(
             MultipartFile archivo,
@@ -88,26 +104,35 @@ public class RecursoService {
             Integer idUsuario
     ) throws IOException {
 
-        // Carpeta del usuario
-        String userFolder = uploadDir + File.separator + "usuario_" + idUsuario + File.separator + "reacciones";
+        // 📌 Ruta absoluta donde se almacenan los archivos
+        String absoluteUploadDir = System.getProperty("user.dir")
+                + File.separator + uploadDir;
+
+        // 📌 Carpeta específica: uploads/usuario_X/reacciones
+        String userFolder = absoluteUploadDir
+                + File.separator + "usuario_" + idUsuario
+                + File.separator + "reacciones";
+
+        // Crear carpetas si no existen
         Files.createDirectories(Paths.get(userFolder));
 
-        // UUID para archivo
+        // 📌 Generar nombre único
         String uuid = UUID.randomUUID().toString();
-        String extension = archivo.getOriginalFilename()
-                .substring(archivo.getOriginalFilename().lastIndexOf("."));
+        String original = archivo.getOriginalFilename();
+        String extension = original.substring(original.lastIndexOf("."));
         String nombreArchivo = uuid + extension;
 
-        // Guardar físicamente
+        // 📌 Guardar archivo en disco
         File destino = new File(userFolder + File.separator + nombreArchivo);
         archivo.transferTo(destino);
 
-        // URL accesible
+        // 📌 Guardar ruta relativa en BD (para servir por /uploads/**)
         recurso.setUrlArchivo("usuario_" + idUsuario + "/reacciones/" + nombreArchivo);
 
-        // Guardar solo el recurso
+        // 📌 Guardar recurso en BD
         return recursoRepository.save(recurso);
     }
+
 
 
 }
