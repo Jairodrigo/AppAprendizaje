@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/valoraciones")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://app-aprendizaje-front.vercel.app")
 public class ValoracionController {
 
     @Autowired
